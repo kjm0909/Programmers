@@ -26,14 +26,106 @@ people	            limit	return
 package Level2;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 public class LifeBoat {
     public static int solution(int[] people, int limit) {
         int answer = 0;
 
-        ArrayList<Integer> arr = new ArrayList<>();
+        Arrays.sort(people);
+
+        LinkedList<Integer> list = new LinkedList<>();
+
+        for(int i=0; i< people.length; i++){
+            list.add(people[i]);
+        }
+        int index = list.size()-1;
+        for(int i = 0; i<=index; i++){
+            // 일단 answer + 1 하고
+            answer++;
+            // 아래 조건을 만족시키지 않으면 각각 타야 하므로 answer + 1 한 번 더 해준다
+            // i 와 index 이 같이 못 타면 index 랑 같이 탈 사람 없음... 그래서 answer++ 하고
+            // index-- 해가면서 i랑 같이 탈 사람 찾음
+            while (index > i && list.get(i) + list.get(index--) > limit) {
+                answer++;
+            }
+            /* 정확성100 효율성60
+            if(list.get(i) == limit){
+                answer++;
+                list.remove(i);
+
+            }else {
+                if (index > i && list.get(0) + list.get(index - i - 1) <= limit) {
+                    list.remove(index - i - 1);
+                    list.remove(0);
+                    i = 0;
+                    answer++;
+                } else if (index == i-1) {
+                    answer += list.size();
+                    break;
+                }
+            }
+            index = list.size();*/
+        }
+//                for (int j = index-1; j > i; j--) {
+//                    System.out.println("people["+i+"]: "+list.get(i)+", people["+j+"]: "+list.get(j));
+//                    if (list.get(i) + list.get(j) <= limit) {
+//                        // 합이 limit 이하인 경우
+//                        answer++;
+//                        System.out.println(">> Remove people["+i+"]: "+list.get(i)+", people["+j+"]: "+list.get(j));
+//                        list.remove(j);
+//                        list.remove(i);
+//                        System.out.println(">> size: "+list.size());
+//                        isRescued = true;
+//                        break;
+//                    }
+//                }
+//                if (!isRescued) {
+//                    answer++;
+//                    i++;
+//                }
+//            }
+
+        return answer;
+
+        /* 정확성 100 효율성 60
+        int index = people.length-1;
+
+        for(int i = 0; i<people.length; i++){
+            boolean isRescued = false;
+            if(people[i]==limit){
+                answer++;
+            }
+            else {
+                if (people[i] != 0) {
+                    for (int j = index; j > i; j--) {
+                        System.out.println("people["+i+"]: "+people[i]+", people["+j+"]: "+people[j]);
+                        if(people[j]==limit){
+                            answer++;
+                            //people[j] = 0;
+                            index = j - 1;
+                        }
+                        if (people[j] != 0 && people[i] + people[j] <= limit) {
+                            // 합이 limit 이하인 경우
+                            answer++;
+                            people[j] = 0;
+                            isRescued = true;
+                            index = j-1;
+                            break;
+                        }
+                    }
+                    if (!isRescued) {
+                        answer++;
+                    }
+                }
+            }
+        }
+        return answer;*/
+
+        //ArrayList 사용 시 효율성에서 fail 됨
+        /*ArrayList<Integer> arr = new ArrayList<>();
         for(int i = 0; i<people.length; i++){
             arr.add(people[i]);
         }
@@ -57,10 +149,9 @@ public class LifeBoat {
             if(arr.get(i) != 0 && !isRescued) {
                 answer++;
             }
-        }
+        }*/
 
 
-        return answer;
     }
 
     public static void main(String[] args) {
